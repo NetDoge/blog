@@ -133,14 +133,14 @@
       animation: crt-flicker 0.15s infinite;
     }
   </style>
+  <link id="dynamic-favicon" rel="icon" type="image/png">
 </head>
 <body>
   <div class="container">
     <header>
-      <canvas id="geom" width="80" height="80" style="float:left; margin-right:8px; border:1px solid #00ff00;"></canvas>
+      <canvas id="geom" width="80" height="80" style="float:left; margin-right:8px; border:1px solid #00ff00; display:block;"></canvas>
       <h1>NetDoge's Blog<span class="blink">_</span></h1>
       <p>Est. 2021 · On the Internet, nobody knows you're a dog</p>
-    
     </header>
 
   <script>
@@ -249,6 +249,14 @@
 
     a += 0.003;
     requestAnimationFrame(draw);
+
+    // update favicon every few frames (very slow, 90s-safe)
+    if((Math.floor(a*1000)) % 120 === 0){
+      try{
+        const fav = document.getElementById('dynamic-favicon');
+        fav.href = c.toDataURL('image/png');
+      }catch(e){}
+    }
   }
 
   draw();
