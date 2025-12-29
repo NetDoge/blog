@@ -36,6 +36,7 @@
       margin-bottom: 16px;
       padding-bottom: 8px;
       text-align: center;
+      overflow: hidden;
     }
 
     header h1 {
@@ -136,9 +137,123 @@
 <body>
   <div class="container">
     <header>
+      <canvas id="geom" width="80" height="80" style="float:left; margin-right:8px; border:1px solid #00ff00;"></canvas>
       <h1>NetDoge's Blog<span class="blink">_</span></h1>
       <p>Est. 2021 · On the Internet, nobody knows you're a dog</p>
+    
     </header>
+
+  <script>
+(function(){
+  const c = document.getElementById('geom');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+
+  const W = c.width;
+  const H = c.height;
+
+  // screen origin (axes intersection)
+  const cx = W * 0.3;
+  const cy = H * 0.7;
+
+  let a = 0;
+
+  // ===== cube vertices =====
+  const pts = [
+    [-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],
+    [-1,-1, 1],[1,-1, 1],[1,1, 1],[-1,1, 1]
+  ];
+
+  // faces (each face as 4 indices)
+  const faces = [
+    { idx:[0,1,2,3], color:'rgba(255,80,80,0.6)' },   // front
+    { idx:[4,5,6,7], color:'rgba(80,80,255,0.6)' },  // back
+    { idx:[0,1,5,4], color:'rgba(80,255,255,0.6)' }, // bottom
+    { idx:[2,3,7,6], color:'rgba(255,255,80,0.6)' }, // top
+    { idx:[1,2,6,5], color:'rgba(255,160,80,0.6)' }, // right
+    { idx:[0,3,7,4], color:'rgba(160,80,255,0.6)' }  // left
+  ];
+
+  // bounding box edges
+  const box = [
+    [0,1],[1,2],[2,3],[3,0],
+    [4,5],[5,6],[6,7],[7,4],
+    [0,4],[1,5],[2,6],[3,7]
+  ];
+
+  const offsetX = 1.2;
+  const offsetY = 1.2;
+
+  function rot(p){
+    let [x,y,z] = p;
+    const s = Math.sin(a);
+    const c0 = Math.cos(a);
+
+    const x1 = x * c0 - z * s;
+    const z1 = x * s + z * c0;
+
+    const y1 = y * c0 - z1 * s;
+    const z2 = y * s + z1 * c0;
+
+    return [x1 + offsetX, y1 + offsetY, z2];
+  }
+
+  function proj(p){
+    const [x,y,z] = p;
+    const d = 3 / (z + 5);
+    return [
+      cx + x * 14 * d,
+      cy - y * 14 * d
+    ];
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // axes
+    ctx.strokeStyle = '#008800';
+    ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
+
+    // transform points
+    const tp = pts.map(p => rot(p));
+    const pp = tp.map(p => proj(p));
+
+    // painter's algorithm: sort faces by avg z
+    const sortedFaces = faces.slice().sort((a,b)=>{
+      const za = a.idx.reduce((s,i)=>s+tp[i][2],0)/4;
+      const zb = b.idx.reduce((s,i)=>s+tp[i][2],0)/4;
+      return za - zb;
+    });
+
+    // draw filled faces
+    sortedFaces.forEach(f=>{
+      ctx.fillStyle = f.color;
+      ctx.beginPath();
+      f.idx.forEach((i,j)=>{
+        const [x,y] = pp[i];
+        j ? ctx.lineTo(x,y) : ctx.moveTo(x,y);
+      });
+      ctx.closePath();
+      ctx.fill();
+    });
+
+    // draw bounding box
+    ctx.strokeStyle = '#00ff00';
+    box.forEach(e=>{
+      ctx.beginPath();
+      ctx.moveTo(pp[e[0]][0], pp[e[0]][1]);
+      ctx.lineTo(pp[e[1]][0], pp[e[1]][1]);
+      ctx.stroke();
+    });
+
+    a += 0.003;
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+</script>
 
     <main id="posts">
       <article>
