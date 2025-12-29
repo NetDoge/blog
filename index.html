@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetDoge's Blog</title>
+
+  <!-- 80s/90s style system font -->
+  <style>
+    /* ===== Reset (very minimal, old-school feel) ===== */
+    body, h1, h2, h3, p, ul, li {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Courier New", Courier, monospace;
+      background: #000080; /* classic dark blue */
+      color: #00ff00;      /* CRT green */
+      line-height: 1.6;
+    }
+
+    /* ===== Layout ===== */
+    .container {
+      max-width: 760px;
+      margin: 20px auto;
+      background: #000000;
+      border: 3px double #00ff00;
+      padding: 16px;
+    }
+
+    header {
+      border-bottom: 2px dashed #00ff00;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    header p {
+      font-size: 14px;
+      color: #00cc00;
+    }
+
+    nav {
+      margin: 12px 0;
+      text-align: center;
+    }
+
+    nav a {
+      color: #00ffff;
+      text-decoration: underline;
+      margin: 0 8px;
+    }
+
+    nav a:hover {
+      background: #00ff00;
+      color: #000000;
+    }
+
+    /* ===== Blog entries ===== */
+    article {
+      margin-bottom: 24px;
+    }
+
+    article h2 {
+      font-size: 20px;
+      margin-bottom: 6px;
+      color: #ffff00;
+    }
+
+    .date {
+      font-size: 12px;
+      color: #00cc00;
+      margin-bottom: 8px;
+    }
+
+    article p {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      border-top: 2px dashed #00ff00;
+      padding-top: 8px;
+      font-size: 12px;
+      text-align: center;
+      color: #00cc00;
+    }
+
+    /* ===== Blinking cursor effect (optional nostalgia) ===== */
+    .blink {
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>NetDoge's Blog<span class="blink">_</span></h1>
+      <p>Est. 2021 · On the Internet, nobody knows you're a dog</p>
+    </header>
+
+    <main id="posts">
+      <article>
+        <h2>Welcome to My Website</h2>
+        <div class="date">2021-05-03</div>
+        <p>
+          Welcome, net traveler. You have reached my personal homepage.
+          This site is best viewed at 800x600.
+        </p>
+        <p>
+          Expect random thoughts, internet culture, and experimental HTML.
+        </p>
+      </article>
+    </main>
+
+    <footer>
+      <p>© 2021–<span id="year"></span> · No cookies · No tracking · No JavaScript frameworks</p>
+    </footer>
+  </div>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
